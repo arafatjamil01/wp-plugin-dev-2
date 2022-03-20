@@ -1,0 +1,20 @@
+{
+    "name": "arafatjamil01/wedevs-academy",
+    "description": "A tutorial plugin for WordPress plugin development",
+    "type": "wordpress-plugin",
+    "license": "GPLv3",
+    "authors": [
+        {
+            "name": "Arafat Jamil",
+            "email": "arafatjamil01@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Wedevs\\Academy\\": "includes/"
+        },
+        "files": []
+    }
+}

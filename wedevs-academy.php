@@ -8,12 +8,14 @@
  * Requires PHP:      7.4
  * Author:            Arafat Jamil
  * Author URI:        https://github.com/arafatjamil01
- * Text Domain:       aj
+ * Text Domain:       weac
  * License:           GPL v3
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  */
 
 defined( 'ABSPATH' ) || exit;
+
+require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * The Main Plugin Class
@@ -31,13 +33,14 @@ final class Wedevs_Academy {
 	private function __construct() {
 		$this->define_constants();
 
-		register_activation_hook();
+		register_activation_hook( __FILE__, [ $this, 'activate' ] );
+		add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
 	}
 
 	/**
 	 * Initialize a singleton instance of Wedevs_Academy Class
 	 *
-	 * @return \Wedevs_Academy
+	 * @return Wedevs_Academy
 	 * The \Wedevs_..., here \ is used to denote we are in root namespace
 	 */
 	public static function init() {
@@ -59,19 +62,47 @@ final class Wedevs_Academy {
 		define( 'WD_ACADEMY_VERSION', self::VERSION );
 		define( 'WD_ACADEMY_FILE', __FILE__ );
 		define( 'WD_ACADEMY_DIR', __DIR__ );
-		define( 'WD_ACADEMY_URL', plugins_url('', WD_ACADEMY_FILE ) );
+		define( 'WD_ACADEMY_URL', plugins_url( '', WD_ACADEMY_FILE ) );
 		define( 'WD_ACADEMY_ASSETS', WD_ACADEMY_URL . '/assets' );
+	}
+
+	/**
+	 * Do stuffs upon plugin activation
+	 *
+	 * @return void
+	 */
+	public function activate() {
+		$installed = get_option( 'wd_academy_installed' );
+
+		if ( ! $installed ) {
+			update_option( 'wd_academy_installed', time() );
+		}
+
+		update_option( 'wd_academy_version', WD_ACADEMY_VERSION );
+	}
+
+	/**
+	 * Initialize the plugin
+	 *
+	 * @return void
+	 */
+	public function init_plugin() {
+		if ( is_admin() ) {
+			new Wedevs\Academy\Admin();
+		} else {
+			new Wedevs\Academy\Frontend();
+		}
 	}
 }
 
 /**
  * Initializes the main plugin
  *
- * @return \Wedevs_Academy
+ * @return Wedevs_Academy
  */
-function wedevs_academ() {
+function wedevs_academy() {
 	return Wedevs_Academy::init();
 }
 
 // kick off the plugin
-wedevs_academ();
+wedevs_academy();
