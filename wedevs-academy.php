@@ -98,7 +98,7 @@ final class Wedevs_Academy {
 /**
  * Initializes the main plugin
  *
- * @return Wedevs_Academy
+ * @return \Wedevs_Academy
  */
 function wedevs_academy() {
 	return Wedevs_Academy::init();
